@@ -27,6 +27,7 @@ import os.path
 import sys
 import time
 import types
+import traceback
 
 from .utils import tiny_repr
 
@@ -264,6 +265,9 @@ def recursive_restore(node, part, outputdir, make_dirs=True):
     if is_directory:
         for child in node.children:
             if not child.ignore():
-                recursive_restore(child, part, outputdir, make_dirs=False)
+                try:
+                    recursive_restore(child, part, outputdir, make_dirs=False)
+                except Exception as e:
+                    logging.error(traceback.format_exc().rstrip())
             else:
                 logging.info(u'Skipping ignored file {}'.format(child))
