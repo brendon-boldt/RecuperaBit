@@ -28,6 +28,7 @@ import logging
 import os.path
 import pickle
 import sys
+import traceback
 
 from recuperabit import logic, utils
 # scanners
@@ -368,7 +369,11 @@ def main():
             exit(0)
         cmd = command[0]
         arguments = command[1:]
-        interpret(cmd, arguments, parts, shorthands, args.outputdir)
+        try:
+            interpret(cmd, arguments, parts, shorthands, args.outputdir)
+        except Exception as e:
+            logging.error(f'Command: "{command}" failed due to following exception:')
+            logging.error(traceback.format_exc().rstrip())
 
 if __name__ == '__main__':
     main()
